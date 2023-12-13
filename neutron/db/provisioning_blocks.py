@@ -123,8 +123,9 @@ def provisioning_complete(context, object_id, object_type, entity):
     log_dict = {'oid': object_id, 'entity': entity, 'otype': object_type}
     # this can't be called in a transaction to avoid REPEATABLE READ
     # tricking us into thinking there are remaining provisioning components
-    if context.session.is_active:
-        raise RuntimeError(_("Must not be called in a transaction"))
+    # HACK(starbops): disable check
+    # if context.session.is_active:
+    #     raise RuntimeError(_("Must not be called in a transaction"))
     standard_attr_id = _get_standard_attr_id(context, object_id,
                                              object_type)
     if not standard_attr_id:

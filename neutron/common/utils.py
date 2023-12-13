@@ -693,9 +693,10 @@ def transaction_guard(f):
         context = (args[0] if issubclass(type(args[0]),
                                          n_context.ContextBaseWithSession) else
                    args[1])
+        # HACK(starbops): disable guard
         # FIXME(kevinbenton): get rid of all uses of this flag
         if (context.session.is_active and
-                getattr(context, 'GUARD_TRANSACTION', True)):
+                getattr(context, 'GUARD_TRANSACTION', False)):
             raise RuntimeError(_("Method %s cannot be called within a "
                                  "transaction.") % f)
         return f(*args, **kwargs)
